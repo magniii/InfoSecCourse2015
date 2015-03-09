@@ -1,0 +1,53 @@
+\documentclass[14pt]{article}
+
+\title{InfoSec2015 Summary 2}
+\date{\today}
+\author{Igor Pevtsov, 53501/3}
+ 
+\begin{document}
+  	\maketitle
+
+	\section{Human-Centered Study of a Network Operations Center: Experience Report and Lessons Learned (p39-paul) summary}
+	\begin{itemize}
+	\item  Network operations centers (NOCs) are the nerve center of any large network’s defense. Networks utilize operations centers as the command site for coordinating network security.
+	\item The target environment was an operations center responsible for the security and defense of a large government network. The NOC was a 24/7 operation with two shifts (day and night) of network defense analysts and managers.
+	\item The NOC is a highly collaborative work environment.  Analysts interact with other NOC analysts and people outside the NOC on a regular basis. The preferred method for sharing information was through verbal and physically co-located interactions.
+	\item The most challenging aspect of the NOC shift manager’s job was maintaining a “mission-level” situation awareness of the health and status of the network.
+	\end{itemize}
+
+	\section{A Tale of Three Security Operation Centers (p43-sundaramurthy) summary}
+	\begin{itemize}
+	\item  SOC operational knowledge is not written down explicitly. The knowledge is transferred among the operational personnel, who establish and manage SOCs, and the analysts who perform security monitoring.
+	\item A SOC1 does not function by itself and is supported by a number of teams ensuring successful operations. Each team is headed by a manager and all the teams are headed by one manager. SOC1 Teams (CORP-I):
+		\begin{itemize}
+		\item Operations ( monitoring, analysis, and mitigation of signiﬁcant information security events to protect the conﬁdentiality, integrity, and availability of the information technology enterprise).
+		\item Engineering (responsible for providing and supporting the SOC with the necessary hardware and software infrastructure).
+		\item Incident Management ( handles events that are escalated from operations requiring in-depth investigation).
+		\item Intelligence ( provides information on various threats that might aﬀect the organization).
+		\item Red Team  actively probes for any vulnerabilities in the corporate IT infrastructure).
+		\end{itemize}
+	\item SOC2 Teams U-SOC):
+		\begin{itemize}
+		\item Operations ( monitoring, analysis, and mitigation of signiﬁcant information security events to protect the conﬁdentiality, integrity, and availability of the information technology enterprise).
+		\item System Administrations (tier 3 oﬃce in charge of University data center, security hardening of hosts, and maintenance of campus servers).
+		\item Networking (tier 3 oﬃce in charge of networking on the campus. They set up wireless access points, handle routing, conﬁgure VLANs, allocate address blocks, and sometimes block hosts from the network).
+		\item Misc Operations ( tier 2 oﬃce in formation and their responsibilities are still being determined. Currently they deal with phishing scams and anti-virus managment. In the near future, they will also sign personal certiﬁcate requests and manage VPN groups. ).
+		\item Help Desk (tier 1 support. This is the oﬃce students, staﬀ, and faculty visit or call to get help on computer and technology issues).
+		\end{itemize}
+	\item Security Information and Event Management (SIEM) is the most important software application used for operations. The SIEM solution uses a concept of Enterprise Security Manager (ESM) with which the analysts interact to issue queries across various log sources.
+	\item There is a well deﬁned training procedure followed for onboarding newly hired L1 analysts.
+	\item Each SOC is structured diﬀerently.
+	\item The SOCs face a constant challenge in justifying their value to the management. Every SOC has its own methods of handling this.
+	\end{itemize}
+
+	\section{An Exploratory Study of White Hat Behaviors in a Web Vulnerability Disclosure Program (p51-zhao) summary}
+	\begin{itemize}
+	\item Malicious hackers (i.e., black hats) keep searching for unknown zero-day software vulnerabilities and attempt to derive (monetary) beneﬁt by either exploiting such vulnerabilities to steal data and damage service availability, or even by selling information about such vulnerabilities on black markets.
+	\item There has always been a debate on whether vulnerability disclosure programs are beneﬁcial to society.
+	\item Wooyun, which launched in May 2010, is the predominant Web vulnerability disclosure program (VDP) in China. Until the end of 2013, it has attracted 3254 white hats to submit 16446 vulnerability reports.
+	\item In particular, researchers observed a high degree of specialization on SQL injection as well as cross-site scripting (XSS) vulnerabilities.
+	\item White hats do not follow a random process during their hunt for vulnerabilities. Rather, they likely follow certain strategies. One possible strategy is to search for a speciﬁc type of vulnerability during a period of time, because each type of vulnerability requires a unique set of skills. Another possible strategy is to thoroughly explore one particular website for a period of time, because familiarity with the website’s architecture and code will facilitate vulnerability discovery.
+	\item The trend for the total number of vulnerability reports and the trend for the number of active white hats are very similar, which suggests that the number of active white hats is critical to the identiﬁcation of vulnerabilities.
+	\item managers of VDPs and VRPs should not only focus on the top contributors, but also try to attract as many white hats as possible as contributors. More participation would likely translate in more diversity during the search process and more discoveries.
+	\end{itemize}
+\end{document}
