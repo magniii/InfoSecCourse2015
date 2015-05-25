@@ -244,9 +244,46 @@ $f(x,y)= 3x^3 + 15y^2 + 10$
 \begin{figure}[h!]
 \centering
 \includegraphics[width=\textwidth]{fig11}
-\caption{Чужой сертификат подписан.}
+\caption{Чужой сертификат (karina.asc) подписан.}
 \end{figure}
 
+\subsubsection{Проверка чужой подписи импортированным сертификатом}
+\begin{figure}[h!]
+\centering
+\includegraphics[width=\textwidth]{fig12}
+\caption{Подлинность файла myfirst.pdf.sig подтверждена.}
+\end{figure}
+
+\subsubsection{Работа с командной строкой}
+Создание ключа осуществляется командой:
+\begin{verbatim}
+	gpg --gen-key
+\end{verbatim}
+
+\begin{figure}[h!]
+\centering
+\includegraphics[width=\textwidth]{fig13}
+\caption{Создание ключа через консоль.}
+\end{figure}
+Просмотреть список ключей можно используя команду list
+\begin{verbatim}
+	gpg --list-keys
+\end{verbatim}
+
+\begin{figure}[h!]
+\centering
+\includegraphics[width=\textwidth]{fig14}
+\caption{Просмотр списка ключей.}
+\end{figure}
+
+Для импорта ключей используется команда
+\begin{verbatim}
+	gpg --import importable.asc
+\end{verbatim}
+Для экспорта применяется команда
+\begin{verbatim}
+	gpg --armor --output exportable.asc --export exporter@mail.ru
+\end{verbatim}
 
 \subsection{Выводы}
 \end{document}
