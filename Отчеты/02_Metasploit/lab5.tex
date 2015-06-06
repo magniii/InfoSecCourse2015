@@ -1,0 +1,97 @@
+\documentclass[a4paper, 14pt]{article}				% general format
+
+\usepackage[utf8]{inputenc}					% accept different input encodings
+\usepackage[russian]{babel}					% multilingual support (T2A)
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{amsmath}
+\usepackage[boxed]{algorithm2e}
+\usepackage{url}
+\usepackage{fancyvrb}
+\usepackage[dvipsnames]{xcolor}
+
+\usepackage{listings}						% typeset source code listings
+
+% Цвета для кода
+\definecolor{string}{HTML}{101AF9}			% цвет строк в коде
+\definecolor{comment}{HTML}{3F7F5F}		% цвет комментариев в коде
+\definecolor{keyword}{HTML}{5F1441}			% цвет ключевых слов в коде
+\definecolor{morecomment}{HTML}{8000FF}		% цвет include и других элементов в коде
+\definecolor{captiontext}{HTML}{FFFFFF}		% цвет текста заголовка в коде
+\definecolor{captionbk}{HTML}{999999}		% цвет фона заголовка в коде
+\definecolor{bk}{HTML}{FFFFFF}			% цвет фона в коде
+\definecolor{frame}{HTML}{999999}			% цвет рамки в коде
+
+% Настройки отображения кода
+\lstset{
+	language=C++,						% Язык кода по умолчанию
+	% Цвета
+	keywordstyle=\color{keyword}\ttfamily\bfseries,
+	stringstyle=\color{string}\ttfamily,
+	commentstyle=\color{comment}\ttfamily\itshape,
+	morecomment=[l][\color{morecomment}]{\#},
+	% Настройки отображения
+	breaklines=true,					% Перенос длинных строк
+	basicstyle=\ttfamily\footnotesize,		% Шрифт для отображения кода
+	backgroundcolor=\color{bk},			% Цвет фона кода
+	frame=tblr						% draw a frame at all sides of the code block
+	rulecolor=\color{frame},				% Цвет рамки
+	tabsize=2,						% tab space width
+	showstringspaces=false,				% don't mark spaces in strings
+	% Настройка отображения номеров строк. Если не нужно, то удалите весь блок
+	numbers=left,					% Слева отображаются номера строк
+	stepnumber=1,					% Каждую строку нумеровать
+	numbersep=5pt,					% Отступ от кода
+	numberstyle=\small\color{black},			% Стиль написания номеров строк
+	}
+% Для настройки заголовка кода
+\usepackage{caption}
+\DeclareCaptionFont{white}{\color{сaptiontext}}
+\DeclareCaptionFormat{listing}{\parbox{\linewidth}{\colorbox{сaptionbk}{\parbox{\linewidth}{#1#2#3}}\vskip-4pt}}
+%\captionsetup[lstlisting]{format=listing,labelfont=white,textfont=white}
+\renewcommand{\lstlistingname}{Листинг} % Переименование Listings в нужное именование структуры
+
+\author{Певцов Игорь, гр.53501/3}
+\title{Отчет по лабораторной работе 5:\\"Инструмент тестов на проникновение Metasploit"\\ по дисциплине\\"Методы и средства защиты информации"}
+
+\begin{document}
+\maketitle
+
+\newpage
+\tableofcontents{}
+
+\newpage
+\section{Инструмент тестов на проникновение Metasploit.}
+
+\subsection{Цель работы}
+Изучение принципов работы инструментария тестов на проникновения Metasploit.
+\subsection{Ход работы}
+
+
+
+\subsubsection{Изучение}
+
+
+
+\subsubsection{Подключение к VNC-серверу, получение доступа к консоли}
+
+
+
+\subsubsection{Получение списка директорий в общем доступе по протоколу SMB}
+
+
+
+\subsubsection{Получение консоли с использованием уязвимости в vsftpd}
+
+
+
+\subsubsection{Получение консоли с использованием уязвимости в irc}
+
+
+\subsubsection{Armitage Hail Mary}
+
+
+\subsection{Выводы}
+
+
+\end{document}

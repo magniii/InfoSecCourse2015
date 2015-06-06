@@ -52,7 +52,7 @@
 \renewcommand{\lstlistingname}{Листинг} % Переименование Listings в нужное именование структуры
 
 \author{Певцов Игорь, гр.53501/3}
-\title{Отчет по лабораторным работам 4-5:\\"Утилита для исследования сети и сканер портов Nmap, Инструмент тестов на проникновение Metasploit"\\ по дисциплине\\"Методы и средства защиты информации"}
+\title{Отчет по лабораторной работе 4:\\"Утилита для исследования сети и сканер портов Nmap"\\ по дисциплине\\"Методы и средства защиты информации"}
 
 \begin{document}
 \maketitle
@@ -67,7 +67,7 @@
 Изучение принципов работы утилиты Nmap на примере локальной сети
 \subsection{Ход работы}
 
-Работа выполнялась в домашней локальной сети с адресами 192.168.1.0/24
+Работа выполнялась в домашней локальной сети с адресами 192.168.1.0/24, а также в сети VMware 192.168.32.0/24
 
 \subsubsection{Определение набора и версии сервисов, запущенных на компьютере в диапазоне адресов.}
 \paragraph{Сканирование хостов\\}
@@ -204,6 +204,16 @@ PORT     STATE   SERVICE
 
 Nmap done: 255 IP addresses (7 hosts up) scanned in 12.46 seconds
 \end{Verbatim}
+Как видим, сканирование показало 7 активных хостов в сети:
+\begin{itemize}
+\item{Маршрутизатор: MAC Address: 10:7B:EF:55:BF:50 (ZyXEL Communications)}
+\item{Хост (Смартфон, подключенный по wifi): MAC Address: 04:DB:56:2D:82:76 (Apple)}
+\item{Хост (Компьютер с интегрированной сетевой картой, подключенный по wifi): MAC Address: 08:60:6E:6D:12:21 (Asustek Computer)}
+\item{Хост (Компьютер с интегрированной сетевой картой, подключенный по wifi): MAC Address: 54:A0:50:52:B2:AF (Asustek Computer)}
+\item{Хост (Телевизор, подключенный по wifi): MAC Address: 94:44:44:8B:A0:D5 (LG Innotek)}
+\item{Хост (Компьютер, подключенный через Etherrnet-кабель): MAC Address: 7C:DD:90:0E:A9:AB (Shenzhen Ogemray Technology Co.)}
+\item{Локальный хост(не сканирован этим способом)}
+\end{itemize}
 
 \paragraph{Сканирование портов с запросом версий сервисов\\}
 Сканируем порты с использованием ключа -V для определени версий
@@ -283,55 +293,74 @@ IE(DFI=N%T=3B-45%TG=40%CD=S)
 Файл \textbf{nmap-service-probes} является базой данных примеров поведения различных сервисов при воздействии на них с помощью Nmap.
 
 Для добавления сигнатуры в файл nmap-service-probes создадим простой tcp-сервер. Исходный код сервера:
-\lstinputlisting[language=C++, caption={Пример простого TCP-сервера}]{../../Programming/main.c}
+\lstinputlisting[language=Java, caption={Пример простого TCP-сервера}]{../../Programming/MultiThreadTCPServer.java}
 
 Сервер запущен, запускаем Nmap.
 \begin{figure}[h!]
 \centering
-\includegraphics[width=\textwidth]{rsrc/nmap_2}
+\includegraphics[width=\textwidth]{rsrc/nmap_3}
 \caption{Сканирование хост-ОС программой Nmap, из под Kali linux.}
 \end{figure}
 
-Nmap не распознал, что сервер является эхо-сервисом, и не смог узнать версию сервиса. Попробуем подредактировать файл nmap-service-probes, добавив следующий текст:
+Nmap распознал, что сервер является эхо-сервисом, но не смог узнать версию сервиса. Попробуем подредактировать файл nmap-service-probes, добавив следующее правило:
 \begin{Verbatim}[frame=single]
 ###########################NEXT PROBE###########################
 # Simple TSP server.
-Probe TCP simple-tcp-server-ver q|version\\r\\n|
-rarity 9
+Probe TCP simple-tcp-server-ver q|version|
 ports 3000
-match stcps m|^1\\.0\\.0$| p/Simple TCP Server/ v/1.2/
+match tcp m|^1.2$| p/Simple TCP Server/ v/1.2/
 \end{Verbatim}
 
 Повторное сканирование:
 
-\begin{Verbatim}[frame=single]
-
-\end{Verbatim}
+\begin{figure}[h!]
+\centering
+\includegraphics[width=\textwidth]{rsrc/nmap_tcpok}
+\caption{Сканирование хост-ОС программой Nmap, из под Kali linux.}
+\end{figure}
 Версия сервиса определена верно.
 
 \paragraph{Сохранение вывода программы в формате xml\\}
 Для сохранения в формате xml используем команду:
 \begin{Verbatim}[frame=single]
-nmap -sV -p 3000 -oX - scanme.nmap.org 192.168.1.48
+nmap -sV -p 3000 192.168.32.1 -oX output.xml
 \end{Verbatim}
 
 Результат выполнения команды:
-\begin{Verbatim}[frame=single]
+\begin{figure}[h!]
+\centering
+\includegraphics[width=\textwidth]{rsrc/nmap_xml}
+\caption{Вывод в .xml формате.}
+\end{figure}
 
-\end{Verbatim}
+\subsubsection{Исследование различных этапов и режимов работы nmap с использованием утилиты Wireshark.}
+Функциональность, которую предоставляет Wireshark, очень схожа с возможностями программы tcpdump, однако Wireshark имеет графический пользовательский интерфейс и гораздо больше возможностей по сортировке и фильтрации информации. Программа позволяет пользователю просматривать весь проходящий по сети трафик в режиме реального времени, переводя сетевую карту в неразборчивый режим(promiscuous mode). Программа распространяется под свободной лицензией GNU GPL и использует для формирования графического интерфейса кроссплатформенную библиотеку GTK+. Wireshark — это приложение, которое «знает» структуру самых различных сетевых протоколов, и поэтому позволяет разобрать сетевой пакет, отображая значение каждого поля протокола любого уровня. Поскольку для захвата пакетов используется pcap, существует возможность захвата данных только из тех сетей, которые поддерживаются этой библиотекой.
+
+Для начала работы выберем в списке интерфейс с названием eth0, далее мы будем видеть все пакеты, проходящие через этот интерфейс. Кликаем Start и видим окно, в котором появляются сетевые пакеты по мере их перехвата.Для примера можно послать команду с хост ОС ''ping 192.168.32.130'' - пропинговать Kali linux с основной ОС (адрес 192.168.32.1). Полученные результаты в окне Wireshark:
+\begin{figure}[h!]
+\centering
+\includegraphics[width=\textwidth]{rsrc/nmap_wireshark_ping}
+\caption{Отслеживание ICMP пакетов, используемых командой ping. Видны и четко различимы пакеты, представляющие собой запросы и ответы.}
+\end{figure}
+
+Чтобы увидеть работу утилиты nmap в окне wireshark запустим на Kali nmap командой ''nmap -sV -p 3000 192.168.32.1'', а на основной ОС запустим простейший tcp-сервер, использованный ранее. Перед этим запустим прослушивание интерфейса eth0 в wireshark. Применяя в wireshark фильтр по tcp пакетам, получаем последовательность запросов и ответов, инициированных nmap:
+\begin{figure}[h!]
+\centering
+\includegraphics[width=\textwidth]{rsrc/nmap_wireshark_sv}
+\caption{Отслеживание tcp пакетов, используемых утилитой nmap. Видны этапы установки соединения, обмена сообщениями и завершения соединения}
+\end{figure}
 
 \subsubsection{Сканирование виртуальной машины Metasploitable2 с использованием db\_nmap из состава metasploitframework.}
 Обе машины находятся в сети 192.168.32.0/24
 \begin{Verbatim}[frame=single]
 msf > db_nmap -v -sV 192.168.32.132
-[*] Nmap: Starting Nmap 6.47 ( http://nmap.org ) at 2015-05-31 21:05 UTC
+[*] Nmap: Starting Nmap 6.47 ( http://nmap.org )
 [*] Nmap: NSE: Loaded 29 scripts for scanning.
 [*] Nmap: Initiating ARP Ping Scan at 21:05
 [*] Nmap: Scanning 192.168.32.132 [1 port]
-[*] Nmap: Completed ARP Ping Scan at 21:05, 0.05s elapsed (1 total hosts)
+[*] Nmap: Completed ARP Ping Scan at 21:05, 0.05s elapsed
 [*] Nmap: Initiating Parallel DNS resolution of 1 host. at 21:05
-[*] Nmap: Completed Parallel DNS resolution of 1 host. at 21:05, 0.01s
-                                                                      elapsed
+[*] Nmap: Completed Parallel DNS resolution of 1 host. at 21:05
 [*] Nmap: Initiating SYN Stealth Scan at 21:05
 [*] Nmap: Scanning 192.168.32.132 [1000 ports]
 [*] Nmap: Discovered open port 22/tcp on 192.168.32.132
@@ -357,12 +386,10 @@ msf > db_nmap -v -sV 192.168.32.132
 [*] Nmap: Discovered open port 2121/tcp on 192.168.32.132
 [*] Nmap: Discovered open port 8009/tcp on 192.168.32.132
 [*] Nmap: Discovered open port 513/tcp on 192.168.32.132
-[*] Nmap: Completed SYN Stealth Scan at 21:05, 0.55s elapsed (1000 total
-                                                                       ports)
+[*] Nmap: Completed SYN Stealth Scan at 21:05, (1000 ports)
 [*] Nmap: Initiating Service scan at 21:05
 [*] Nmap: Scanning 23 services on 192.168.32.132
-[*] Nmap: Completed Service scan at 21:05, 11.76s elapsed (23 services on 1
-                                                                        host)
+[*] Nmap: Completed Service scan  (23 services on 1  host)
 [*] Nmap: NSE: Script scanning 192.168.32.132.
 [*] Nmap: Initiating NSE at 21:05
 [*] Nmap: Completed NSE at 21:05, 0.16s elapsed
@@ -371,14 +398,14 @@ msf > db_nmap -v -sV 192.168.32.132
 [*] Nmap: Not shown: 977 closed ports
 [*] Nmap: PORT     STATE SERVICE     VERSION
 [*] Nmap: 21/tcp   open  ftp         vsftpd 2.3.4
-[*] Nmap: 22/tcp   open  ssh         OpenSSH 4.7p1 Debian 8ubuntu1 (protocol 2.0)
+[*] Nmap: 22/tcp   open  ssh       OpenSSH 4.7p1 Debian 8ubuntu1
 [*] Nmap: 23/tcp   open  telnet      Linux telnetd
 [*] Nmap: 25/tcp   open  smtp        Postfix smtpd
 [*] Nmap: 53/tcp   open  domain      ISC BIND 9.4.2
-[*] Nmap: 80/tcp   open  http        Apache httpd 2.2.8 ((Ubuntu) DAV/2)
+[*] Nmap: 80/tcp   open  http        Apache httpd 2.2.8
 [*] Nmap: 111/tcp  open  rpcbind     2 (RPC #100000)
-[*] Nmap: 139/tcp  open  netbios-ssn Samba smbd 3.X (workgroup: WORKGROUP)
-[*] Nmap: 445/tcp  open  netbios-ssn Samba smbd 3.X (workgroup: WORKGROUP)
+[*] Nmap: 139/tcp  open  netbios-ssn Samba smbd 3.X
+[*] Nmap: 445/tcp  open  netbios-ssn Samba smbd 3.X
 [*] Nmap: 512/tcp  open  exec        netkit-rsh rexecd
 [*] Nmap: 513/tcp  open  login
 [*] Nmap: 514/tcp  open  tcpwrapped
@@ -391,60 +418,83 @@ msf > db_nmap -v -sV 192.168.32.132
 [*] Nmap: 5900/tcp open  vnc         VNC (protocol 3.3)
 [*] Nmap: 6000/tcp open  X11         (access denied)
 [*] Nmap: 6667/tcp open  irc         Unreal ircd
-[*] Nmap: 8009/tcp open  ajp13       Apache Jserv (Protocol v1.3)
-[*] Nmap: 8180/tcp open  http        Apache Tomcat/Coyote JSP engine 1.1
-[*] Nmap: MAC Address: 08:00:27:6E:3D:DB (Cadmus Computer Systems)
-[*] Nmap: Service Info: Hosts:  metasploitable.localdomain, localhost, 
-     irc.Metasploitable.LAN; OSs: Unix, Linux; CPE: cpe:/o:linux:linux_kernel
+[*] Nmap: 8009/tcp open  ajp13  Apache Jserv (Protocol v1.3)
+[*] Nmap: 8180/tcp open  http  Apache Tomcat
+[*] Nmap: MAC Address: 08:00:27:6E:3D:DB (Cadmus Systems)
+[*] Nmap: Service Info: Hosts:  metasploitable.localdomain,
+ localhost, irc.Metasploitable.LAN; OSs: Unix, Linux; CPE: 
+     cpe:/o:linux:linux_kernel
 [*] Nmap: Read data files from: /usr/bin/../share/nmap
-[*] Nmap: Service detection performed. Please report any incorrect results at
-                                                    http://nmap.org/submit/ .
-[*] Nmap: Nmap done: 1 IP address (1 host up) scanned in 14.14 seconds
-[*] Nmap: Raw packets sent: 1001 (44.028KB) | Rcvd: 1001 (40.120KB)
+[*] Nmap: Service detection performed. Please report any
+ incorrect results at  http://nmap.org/submit/ .
+[*] Nmap: Nmap done: 1 IP address (1 host up)
+ scanned in 14.14 seconds
+[*] Nmap: Raw packets sent: 1001 (44.028KB) | Rcvd: 1001 (40 KB)
 msf > 
 \end{Verbatim}
 
 
 \subsubsection{Выбрать 5 записей из файла nmap-service-probes и описать их работу.}
 
+\paragraph{Запись 1\\}
+Предназначена для проверки ответа сервиса на пустую строку. Предполагается ответ в течении 6 секунд, если ответа не последовало, то выполняется следующий тест.
+\begin{figure}[h!]
+\centering
+\includegraphics[width=\textwidth]{rsrc/nmap_entry1}
+\caption{Запись 1''.}
+\end{figure}
 
+\paragraph{Запись 2\\}
+Запись проверяет сервис на соответствие протооколу FTP и ожидает что это программа FileZilla.
+\begin{figure}[h!]
+\centering
+\includegraphics[width=\textwidth]{rsrc/nmap_entry2}
+\caption{Запись 2''.}
+\end{figure}
 
+\paragraph{Запись 3\\}
+Запись проверяет, что на запрос отвечает служба gkrellm. Ожидает одну из двух ошибок (либо обе, поскольку поставлено правило \textbf{softmatch}, а не \textbf{match} и по нему тестирование не переходит к следующему тесту при ошибке, а продолжает текущий тест).
+\begin{figure}[h!]
+\centering
+\includegraphics[width=\textwidth]{rsrc/nmap_entry3}
+\caption{Запись 3''.}
+\end{figure}
+
+\paragraph{Запись 4\\}
+Запись тестирует сервис на принадлежность протоколу pop3. Ожидается ответ ''+ОК AppleMailServer ...''. Вероятнее всего, что ожидается, что сервисом является какой-либо почтовый сервер от компании Apple.
+\begin{figure}[h!]
+\centering
+\includegraphics[width=\textwidth]{rsrc/nmap_entry4}
+\caption{Запись 4''.}
+\end{figure}
+
+\paragraph{Запись 5\\}
+Запись тестирует сервис на принадлежность протоколу http. Предполагается,что сервисом является Microsoft IIS Server - http сервер от Microsoft. Правило предполагает возвращение http-кода 400, что соответствует 400 Bad Request — сервер обнаружил в запросе клиента синтаксическую ошибку.
+\begin{figure}[h!]
+\centering
+\includegraphics[width=\textwidth]{rsrc/nmap_entry5}
+\caption{Запись 5'.}
+\end{figure}
+
+\newpage
 \subsubsection{Выбрать один скрипт из состава Nmap и описать его работу.}
 
-
-\subsection{Выводы}
-
-
-\section{Инструмент тестов на проникновение Metasploit.}
-
-\subsection{Цель работы}
-Изучение принципов работы инструментария тестов на проникновения Metasploit.
-\subsection{Ход работы}
-
-
-
-\subsubsection{Изучение}
-
-
-
-\subsubsection{Подключение к VNC-серверу, получение доступа к консоли}
-
-
-
-\subsubsection{Получение списка директорий в общем доступе по протоколу SMB}
-
-
-
-\subsubsection{Получение консоли с использованием уязвимости в vsftpd}
-
-
-
-\subsubsection{Получение консоли с использованием уязвимости в irc}
-
-
-\subsubsection{Armitage Hail Mary}
+Выберем скрипт под именем ftp-anon.nse. Этот скрипт предназначен для проверки FTP-сервера на возможность анонимного подключения. Скрипт посылает команду PASV и ждет порт для подключения. Затем он запрашивает список директорий командой LIST и ожидает ответ в формате что-то вроде ''2хх Entering Passive Mode ... ''. Если сервер вернул код 332, то есть нужен аккаунт для логина, то анонимные подключения на сервере запрещены.
+Для запуска скрипта используем команду:
+\begin{Verbatim}[frame=single]
+nmap --script ''ftp-anon.nse'' 151.80.164.83
+\end{Verbatim}
+Полученные результаты:
+\begin{figure}[h!]
+\centering
+\includegraphics[width=\textwidth]{rsrc/nmap_nse_ftp}
+\caption{Сканирование FTP-сервера программой Nmap с использованием скрипта ''ftp-anon.nse''.}
+\end{figure}
 
 
 \subsection{Выводы}
+nmap — свободная утилита, предназначенная для разнообразного настраиваемого сканирования IP-сетей с любым количеством объектов, определения состояния объектов сканируемой сети (портов и соответствующих им служб). Nmap использует множество различных методов сканирования, таких как UDP, TCP (connect), TCP SYN (полуоткрытое), FTP-proxy (прорыв через ftp), Reverse-ident, ICMP (ping), FIN, ACK, Xmas tree, SYN- и NULL-сканирование. Использование nmap позволяет находить потенциальные уязвимости в сетевых сервисах хостов. Это может помочь системному администратору закрыть уязвимости в безопасности сети и повысить уровень ее надежности.
+
+
 
 \end{document}
