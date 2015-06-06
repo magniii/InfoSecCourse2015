@@ -285,21 +285,14 @@ IE(DFI=N%T=3B-45%TG=40%CD=S)
 Для добавления сигнатуры в файл nmap-service-probes создадим простой tcp-сервер. Исходный код сервера:
 \lstinputlisting[language=C++, caption={Пример простого TCP-сервера}]{../../Programming/main.c}
 
-Сервер запущен, запускаем Nmap:
-\begin{Verbatim}[frame=single]
-nmap -sV -p 3000 192.168.1.48
+Сервер запущен, запускаем Nmap.
+\begin{figure}[h!]
+\centering
+\includegraphics[width=\textwidth]{rsrc/nmap_2}
+\caption{Сканирование хост-ОС программой Nmap, из под Kali linux.}
+\end{figure}
 
-Starting Nmap 6.47 ( http://nmap.org ) at 2015-05-31 18:56 RTZ 2
-Nmap scan report for 192.168.1.48
-Host is up (0.0038s latency).
-PORT     STATE SERVICE VERSION
-3000/tcp open  echo
-
-Service detection performed.
-Please report any incorrect results at http://nmap.org/submit/ .
-Nmap done: 1 IP address (1 host up) scanned in 41.28 seconds
-\end{Verbatim}
-Nmap распознал, что сервер является эхо-сервисом, однако не смог узнать версию сервиса. Попробуем подредактировать файл nmap-service-probes, добавив следующий текст:
+Nmap не распознал, что сервер является эхо-сервисом, и не смог узнать версию сервиса. Попробуем подредактировать файл nmap-service-probes, добавив следующий текст:
 \begin{Verbatim}[frame=single]
 ###########################NEXT PROBE###########################
 # Simple TSP server.
@@ -312,15 +305,7 @@ match stcps m|^1\\.0\\.0$| p/Simple TCP Server/ v/1.2/
 Повторное сканирование:
 
 \begin{Verbatim}[frame=single]
-$ nmap -sV -p 3000 192.168.1.48
-Starting Nmap 6.47 ( http://nmap.org ) at 2015-05-31 18:56 RTZ 2
-Nmap scan report for 192.168.1.48
-Host is up (0.0035s latency).
-PORT     STATE SERVICE VERSION
-3000/tcp open  stcps   Simple TCP Server 1.2
-Service detection performed. 
-Please report any incorrect results at http://nmap.org/submit/ .
-Nmap done: 1 IP address (1 host up) scanned in 6.21 seconds
+
 \end{Verbatim}
 Версия сервиса определена верно.
 
@@ -332,35 +317,7 @@ nmap -sV -p 3000 -oX - scanme.nmap.org 192.168.1.48
 
 Результат выполнения команды:
 \begin{Verbatim}[frame=single]
-<?xml version="1.0"?>
-<?xml-stylesheet href="file:///usr/bin/../share/nmap/nmap.xsl"
-                                        type="text/xsl"?>
-<!-- Nmap 6.47 scan initiated Sun May 31 23:47:51 2015
-     as: nmap -sV -p 3000 -oX - scanme.nmap.org 192.168.1.48 -->
-<nmaprun scanner="nmap" args="nmap -sV -p 3000 -oX - scanme.nmap.org
- 192.168.1.48" start="1431910071" startstr="Sun May 31 23:47:51
-   2015" version="6.47" xmloutputversion="1.04">
-<scaninfo type="connect" protocol="tcp" numservices="1" services="3000"/>
-<verbose level="0"/>
-<debugging level="0"/>
-<host starttime="1431910071" endtime="1431910079"><status state="up"
-         reason="conn-refused" reason_ttl="0"/>
-<address addr="192.168.1.48" addrtype="ipv4"/>
-<hostnames>
-</hostnames>
-<ports><port protocol="tcp" portid="3000"><state state="open"
-     reason="syn-ack" reason_ttl="0"/><service name="stcps" product=
-     "Simple TCP Server" version="1.2" method="probed" conf="10"/>
-    </port>
-</ports>
-<times srtt="4122" rttvar="2991" to="100000"/>
-</host>
-<runstats><finished time="1431910079" timestr="Sun May 31 23:47:51 2015"
- elapsed="7.40" summary="Nmap done at Sun May 31 23:47:51 2015;
-   2 IP addresses (1 host up) scanned in 7.40 seconds"
-  exit="success"/><hosts up="1" down="1" total="2"/>
-</runstats>
-</nmaprun>
+
 \end{Verbatim}
 
 \subsubsection{Сканирование виртуальной машины Metasploitable2 с использованием db\_nmap из состава metasploitframework.}
